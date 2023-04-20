@@ -1,5 +1,6 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as session from 'express-session';
 
 import configuration from './config';
 import { AppController } from './app.controller';
@@ -19,6 +20,16 @@ import { AppLoggerMiddleware } from './logger.middleware';
 export class AppModule implements NestModule {
   constructor(private configService: ConfigService) {}
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+    const sessionMiddleware = session({
+      secret: this.configService.get('secret'),
+      resave: false,
+      saveUninitialized: false,
+    });
+    
+    consumer.apply(
+      AppLoggerMiddleware,
+      sessionMiddleware,
+    )
+      .forRoutes('*');
   }
 }
