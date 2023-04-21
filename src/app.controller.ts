@@ -1,8 +1,12 @@
 import { Controller, Get, Post, Body, Session } from '@nestjs/common';
+import { IsNotEmpty } from 'class-validator';
 import { AppService } from './app.service';
 
 class AuthDto {
+  @IsNotEmpty()
   username: string;
+
+  @IsNotEmpty()
   password: string;
 }
 
