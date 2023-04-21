@@ -12,7 +12,7 @@ export class AppController {
   
   @Post('/login')
   login(@Body() body: AuthDto, @Session() session: Record<string, any>): void {
-    session.usernmae = body.username;
+    session.username = body.username;
   }
 
   @Get()

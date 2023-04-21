@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { AppLoggerMiddleware } from './logger.middleware';
+import { BlockUserMiddleware } from './block-user.middleware';
 
 import { RedisService } from './redis.service';
 
@@ -37,11 +38,15 @@ export class AppModule implements NestModule {
       resave: false,
       saveUninitialized: false,
     });
-    
-    consumer.apply(
-      AppLoggerMiddleware,
-      sessionMiddleware,
-    )
+
+    consumer
+      .apply(
+        AppLoggerMiddleware,
+        sessionMiddleware,
+      )
+      .forRoutes('*')
+      .apply(BlockUserMiddleware)
+      .exclude('/login')
       .forRoutes('*');
   }
 }

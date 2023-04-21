@@ -23,4 +23,15 @@ export class RedisService {
     }
     return this.client;
   }
+  
+  async getData(key: string): Promise<Record<string, any>> {
+    const client = await this.getClient();
+    const data = await client.get(key);
+    return JSON.parse(data);
+  }
+  
+  async setData(key: string, data: Record<string, any>): Promise<void> {
+    const client = await this.getClient();
+    await client.set(key, JSON.stringify(data));
+  }
 }
